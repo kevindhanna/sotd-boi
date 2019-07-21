@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+
+:css
+  .profile-box {
+    float: right;
+    width: 125px;
+  }
+  .header h1 {
+    display: inline-block;
+  }
+
+.header
+  %h1 SOTD Boi
+  %br
+  - if REDIS.get('refresh_token') == nil
+    %a{href: "/auth/spotify"}
+      Login to Spotify
+  - else
+    %h2 Lulz
