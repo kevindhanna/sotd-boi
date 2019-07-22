@@ -13,7 +13,7 @@ module Web
       set    :views,         'app/web/views'
       set    :erb, escape_html: true,
                    layout_options: {views: 'app/views/layouts'}
-      # set :port, 7654
+      set :port, $PORT
       enable :sessions
     end
     
