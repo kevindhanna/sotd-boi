@@ -10,6 +10,11 @@
       "value": "production",
       "required": true
     },
+    "APP_URL": {
+      "description": "URL of your web app, used for spotify redirect",
+      "value": "production",
+      "required": true
+    },
     "DISCORD_TOKEN": {
       "description": "Your Discord Bot Token",
       "required": true

@@ -34,7 +34,7 @@ module Web
       scope = 'playlist-modify-public playlist-modify-private'
       redirect 'https://accounts.spotify.com/authorize?' +
         "response_type=code&" +
-        "client_id=#{ENV['SPOTIFY_CLIENT_ID']}&" +
+        "client_id=#{configatron.spotify.client_id}&" +
         "scope=#{scope}&" +
         "redirect_uri=#{URI.encode(configatron.spotify.redirect.uri)}&state=#{state}" 
     end
