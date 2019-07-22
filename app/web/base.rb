@@ -15,7 +15,7 @@ module Web
       enable :sessions
     end
 
-    helpers Web::Helpers, Sinatra::Cookies
+    helpers Sinatra::Cookies
     # use Web::Hooks
     # use Web::Dashboard
 

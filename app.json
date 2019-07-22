@@ -1,9 +1,9 @@
 {
-  "name": "ruby-discord-bot",
-  "description": "A premade skelleton for a discord bot based on discordrb.",
-  "repository": "https://github.com/elfenars/ruby-discord-bot",
+  "name": "sotd-boi",
+  "description": "A ruby bot for adding songs to a spotify playlist.",
+  "repository": "https://github.com/kevindhanna/sotd-boi",
   "logo": "https://discordapp.com/assets/2c21aeda16de354ba5334551a883b481.png",
-  "keywords": ["discord", "bot", "ruby", "sinatra", "heroku", "webhooks"],
+  "keywords": ["discord", "bot", "ruby", "sinatra", "heroku"],
   "env": {
     "APP_ENV": {
       "description": "Environment for the bot (testing, staging, production)",
@@ -18,17 +18,29 @@
       "description": "Your Discord Client ID",
       "required": true
     },
-    "DISCORD_OWNER_ID": {
-      "description": "The Discord ID of the server owner",
+    "SPOTIFY_CLIENT_ID": {
+      "description": "Spotify API Client ID",
       "required": true
     },
-    "DISCORD_BOT_PREFIX": {
-      "description": "Prefix for bot commands",
-      "value": "!"
+    "SPOTIFY_CLIENT_SECRET": {
+      "description": "Spotify API Client Secret",
+      "value": true
     },
-    "DISCORD_BOT_GAME": {
-      "description": "Game the bot will be playing",
-      "required": false
-    }
+    "SPOTIFY_USER_ID": {
+      "description": "Spotify User ID of the Song Of The Day Playlist",
+      "required": true
+    },
+    "SOTD_PLAYLIST": {
+      "description": "Spotify Song of the Day Playlist ID",
+      "required": true
+    },
+    "SPOTIFY_INTEGRATION_URL": {
+      "description": "URL to ",
+      "required": true
+    },
+    "REDIS_URL": {
+      "description": "URL for Redis instance",
+      "required": true
+    },
   }
 }
