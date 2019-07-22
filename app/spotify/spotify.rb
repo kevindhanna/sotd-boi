@@ -1,18 +1,9 @@
 require 'redis'
 
-module Web
-    module Helpers
+module Spotify
+  module SotdBoiSpotify
 
-    SPOTIFY_REDIRECT_PATH = '/auth/spotify/callback' 
-
-    # heroku
-    # SPOTIFY_REDIRECT_URI = "https://sotd-spotifyintegration.herokuapp.com#{SPOTIFY_REDIRECT_PATH}"
-
-    # #local dev
-    require 'dotenv/load'
-    SPOTIFY_REDIRECT_URI = "http://localhost:7654#{SPOTIFY_REDIRECT_PATH}"
-
-    REDIS = Redis.new(url: ENV["REDIS_URL"])
+    REDIS = Redis.new(url: configatron.redis.url)
 
     def get_access_token()
       if REDIS.ttl('access_token') < 100
@@ -33,26 +24,56 @@ module Web
 
     def add_track_to_playlist(track_uris)
       begin
-        url = "https://api.spotify.com/v1/playlists/#{ENV['SOTD_PLAYLIST']}/tracks?"
+        url = "https://api.spotify.com/v1/playlists/#{configatron.spotify.playlist_uri}/tracks?"
       
         form_data = { 
           'uris' => track_uris
         }
-        puts "add_track method form_data = #{form_data}"
       
         headers = {
           'Authorization' => "Bearer #{get_access_token}",
           'Accept:' => 'application/json'
         }
-        puts "add_track method headers = #{headers}"
         
         response = HTTParty.post url,
           body: form_data.to_json,
           headers: headers
+        
         puts response
-        response.message
       
-      rescue Exception => e
+      rescue StandardError => e
+        puts "Spotify add #{exception} error:"
+        puts e
+      end
+    end
+
+    def search_and_add(search_strings)
+      # sends each search string to spotify and append to URIs array
+      begin
+        uris = []
+        search_strings.each do |search_string|
+          headers = {
+            'Authorization' => "Bearer #{get_access_token}",
+          }
+      
+          form_data = { 
+            'q' => search_string,
+            'type' => 'track'
+          }
+      
+          response = HTTParty.get'https://api.spotify.com/v1/search',
+            query: form_data,
+            headers: headers
+
+          
+          track_uri = JSON.parse(response.to_s)["tracks"]["items"].first["uri"]
+          uris.append(track_uri)
+        end
+
+        add_track_to_playlist(uris)
+    
+      rescue StandardError => e
+        puts "E: spotify search #{Exception} error:"
         puts e
       end
     end
@@ -72,7 +93,7 @@ module Web
     end
       
     def get_auth_headers()
-      str = ENV['SPOTIFY_CLIENT_ID'] + ':' + ENV['SPOTIFY_CLIENT_SECRET']
+      str = configatron.spotify.client_id + ':' + configatron.spotify.client_secret
       auth_string = Base64.strict_encode64 str
       headers = {
           'Authorization' => "Basic #{auth_string}"

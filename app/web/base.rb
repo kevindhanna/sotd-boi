@@ -11,14 +11,17 @@ module Web
       set    :views,         'app/web/views'
       set    :erb, escape_html: true,
                    layout_options: {views: 'app/views/layouts'}
-      set :port, 7654
+      # set :port, 7654
       enable :sessions
     end
 
     helpers Sinatra::Cookies
-    # use Web::Hooks
-    # use Web::Dashboard
-
+    SPOTIFY_REDIRECT_PATH = '/auth/spotify/callback' 
+    # heroku
+    SPOTIFY_REDIRECT_URI = "https://sotd-spotifyintegration.herokuapp.com#{SPOTIFY_REDIRECT_PATH}"
+    # #local dev
+    # require 'dotenv/load'
+    # SPOTIFY_REDIRECT_URI = "http://localhost:7654#{SPOTIFY_REDIRECT_PATH}"
 
     get '/' do
       haml :index
@@ -68,37 +71,6 @@ module Web
         puts e
       end
       redirect to('/')
-    end
-    
-    post '/addtrack' do
-      uris = [params[:uris]]
-      puts "/addtrack uris = #{uris}"
-      add_track_to_playlist(uris)
-    end
-    
-    post '/search_and_add' do
-      search_string = params[:search_string]
-      begin
-        
-        headers = {
-          'Authorization' => "Bearer #{get_access_token}",
-        }
-    
-        form_data = { 
-          'q' => search_string,
-          'type' => 'track'
-        }
-    
-        response = HTTParty.get'https://api.spotify.com/v1/search',
-          query: form_data,
-          headers: headers
-        
-        track_uri = JSON.parse(response.to_s)["tracks"]["items"].first["uri"]
-        add_track_to_playlist([track_uri])
-    
-      rescue Exception => e
-        puts e
-      end
     end
   end
 end

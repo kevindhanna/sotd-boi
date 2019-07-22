@@ -4,8 +4,6 @@ require 'discordrb'
 $bot = Discordrb::Bot.new(
   token:       configatron.discord.token,
   client_id:   configatron.discord.client_id
-  # prefix:      configatron.discord.bot_prefix,
-  # ignore_bots: true
 )
 
 # Load all discord containers.

@@ -35,7 +35,7 @@
       "required": true
     },
     "SPOTIFY_INTEGRATION_URL": {
-      "description": "URL to ",
+      "description": "URL to Spotify ",
       "required": true
     },
     "REDIS_URL": {
