@@ -2,11 +2,11 @@
 require 'redis'
 require 'rubygems'
 require 'bundler'
-require 'dotenv/load' if configatron.app.env == "development"
 require 'httparty'
+require_all 'config/config.rb', 'config/discord.rb'
+require 'dotenv/load' if configatron.app.env == "development"
 Bundler.require(:default, ENV["APP_ENV"] || "development")
 
-require_all 'config/config.rb', 'config/discord.rb'
 
 REDIS = Redis.new(url: configatron.redis.url)
 
