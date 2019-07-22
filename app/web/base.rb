@@ -3,21 +3,21 @@ require 'sinatra/cookies'
 require 'base64'
 require 'uri'
 require_relative '../spotify/spotify'
-require 'dotenv/load' if configatron.app.env == 'development'
 
 module Web
   class Base < Sinatra::Base
+    helpers Sinatra::Cookies, Spotify::SotdBoiSpotify
+    
     configure :production, :development do
       enable :logging
       set    :public_folder, 'app/web/public'
       set    :views,         'app/web/views'
       set    :erb, escape_html: true,
                    layout_options: {views: 'app/views/layouts'}
-      set :port, $PORT
+      # set :port, 7654
       enable :sessions
     end
     
-    helpers Sinatra::Cookies, Spotify::SotdBoiSpotify
 
     get '/' do
       haml :index

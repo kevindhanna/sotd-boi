@@ -26,7 +26,7 @@ module Discord
         end
       end
     end
-
+    
     message(contains: /(https:\/\/).*youtu.*/) do |event|
       if event.channel.name == "song-of-the-day" then
         # gets Youtube video titles to use as search criteria in Spotify
