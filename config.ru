@@ -13,5 +13,5 @@ REDIS = Redis.new(url: configatron.redis.url)
 $bot.run :async
 
 require_all 'config/web.rb'
-run Web:Base
+run Web::Base
 $stdout.sync = true
