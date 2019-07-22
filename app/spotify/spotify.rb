@@ -1,9 +1,5 @@
-require 'redis'
-
 module Spotify
   module SotdBoiSpotify
-
-    REDIS = Redis.new(url: configatron.redis.url)
 
     def get_access_token()
       if REDIS.ttl('access_token') < 100
@@ -22,7 +18,29 @@ module Spotify
       REDIS.set('refresh_token', refresh_token) if refresh_token != ''
     end
 
+    def request_auth_tokens(redirect_code)
+      # uses spotify client ID and secret to request initial 0Auth headers
+      begin
+        form_data = {
+          'code' => redirect_code,
+          'redirect_uri' => configatron.spotify.redirect.uri,
+          'grant_type' => 'authorization_code'
+        }
+  
+        response = HTTParty.post 'https://accounts.spotify.com/api/token',
+            query: form_data,
+            headers: get_auth_headers
+        
+        user_hash = JSON.parse(response.to_s).to_h
+        set_tokens(user_hash['access_token'], user_hash['expires_in'], user_hash['refresh_token'])
+      rescue StandardError => e
+        puts "E: request_auth_tokens #{Exception} error:"
+        puts e
+      end
+    end
+
     def add_track_to_playlist(track_uris)
+      # adds each track uri in array to nominated playlist
       begin
         url = "https://api.spotify.com/v1/playlists/#{configatron.spotify.playlist_uri}/tracks?"
       
@@ -42,7 +60,7 @@ module Spotify
         puts response
       
       rescue StandardError => e
-        puts "Spotify add #{exception} error:"
+        puts "E: add_track_to_playlist #{exception} error:"
         puts e
       end
     end
@@ -73,12 +91,13 @@ module Spotify
         add_track_to_playlist(uris)
     
       rescue StandardError => e
-        puts "E: spotify search #{Exception} error:"
+        puts "E: search_and_add #{Exception} error:"
         puts e
       end
     end
       
-    def refresh_access_token()    
+    def refresh_access_token()
+      # uses stored refresh token to request a new access token from Spotify web API
       form_data = {
         'refresh_token' => get_refresh_token,
         'grant_type' => 'refresh_token'

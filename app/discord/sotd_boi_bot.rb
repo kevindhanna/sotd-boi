@@ -21,7 +21,7 @@ module Discord
 
         rescue StandardError => e
           event.respond "Something's broken. Tell Kevin to fix me."
-          puts "E: discord bot #{Exception} error:"
+          puts "E: contains_spotify #{Exception} error:"
           puts e
         end
       end
@@ -29,8 +29,9 @@ module Discord
 
     message(contains: /(https:\/\/).*youtu.*/) do |event|
       if event.channel.name == "song-of-the-day" then
+        # gets Youtube video titles to use as search criteria in Spotify
+        search_strings = []
         begin
-          search_strings = []
           URI.extract(event.content.to_s).each do |url|
             response = HTTParty.get url
             search_string = Nokogiri::HTML(response).title.scan(/[a-zA-Z0-9\s]/).join("")
@@ -38,10 +39,11 @@ module Discord
 
             search_strings.append(search_string)            
           end
+          
           search_and_add(search_strings)
         rescue StandardError => e
           event.respond "Something's broken. Tell Kevin to fix me."
-          puts "E: discord bot #{Exception} error:"
+          puts "E: contains_youtube #{Exception} error:"
           puts e 
         end
       end
