@@ -2,7 +2,7 @@
 require 'redis'
 require 'rubygems'
 require 'bundler'
-require 'dotenv/load'
+require 'dotenv/load' if configatron.app.env == "development"
 require 'httparty'
 Bundler.require(:default, ENV["APP_ENV"] || "development")
 

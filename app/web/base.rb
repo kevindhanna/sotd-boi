@@ -3,7 +3,7 @@ require 'sinatra/cookies'
 require 'base64'
 require 'uri'
 require_relative '../spotify/spotify'
-require 'dotenv/load' if configatron.app.env = 'development'
+require 'dotenv/load' if configatron.app.env == 'development'
 
 module Web
   class Base < Sinatra::Base
