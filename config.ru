@@ -1,8 +1,11 @@
 # Main entrypoint. Things loaded here are available EVERYWHERE.
+unless ENV['RACK_ENV'] == 'production'
+  require 'dotenv/load'
+end
+
 require 'redis'
 require 'rubygems'
 require 'bundler'
-# require 'dotenv/load'
 require 'httparty'
 Bundler.require(:default, ENV["APP_ENV"] || "development")
 
